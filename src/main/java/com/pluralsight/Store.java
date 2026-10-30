@@ -1,5 +1,7 @@
 package com.pluralsight;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -63,6 +65,27 @@ public class Store {
     public static void loadInventory(String fileName, ArrayList<Product> inventory) {
         // TODO: skip the header line, then read each line, split on "|",
         //       create a Product object, and add it to the inventory list
+        String line;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("products.csv"));
+            reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split("\\|");
+                String sku = tokens[0];
+                String name = tokens[1];
+                double price = Double.parseDouble(tokens[2]);
+                String department = tokens[3];
+                inventory.add(new Product(sku, name, price, department));
+
+                //  inventory.put(id, new Product(id, name, price));
+                //inventory.put
+            }
+
+        } catch (Exception e) {
+            System.err.println(e);
+            System.out.println(e.getCause());
+        }
+
     }
 
     /**
@@ -74,6 +97,13 @@ public class Store {
                                        Scanner scanner) {
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
+        for (Product product : inventory) {
+            System.out.println("=====These are the products in our inventory=====");
+            System.out.printf("%s|          %s           |%.2f|          %s", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
+        }
+        System.out.print("You can find a product with an ID.Enter the ID here");
+        System.out.println();
+
     }
 
     /**
