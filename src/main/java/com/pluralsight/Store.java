@@ -97,12 +97,17 @@ public class Store {
                                        Scanner scanner) {
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
+        System.out.println("=====These are the products in our inventory=====");
         for (Product product : inventory) {
-            System.out.println("=====These are the products in our inventory=====");
             System.out.printf("%s|          %s           |%.2f|          %s", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
+            System.out.println();
+
         }
-        System.out.print("You can find a product with an ID.Enter the ID here");
+        System.out.println("You can find a product with an ID, Enter the ID here");
         System.out.println();
+        String input = scanner.nextLine();
+
+
 
     }
 
