@@ -3,6 +3,7 @@ package com.pluralsight;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -22,6 +23,7 @@ public class Store {
         // Create lists for inventory and the shopping cart
         ArrayList<Product> inventory = new ArrayList<>();
         ArrayList<Product> cart = new ArrayList<>();
+        ArrayList<Product> counter = new ArrayList<>();
 
         // Load inventory from the data file (pipe-delimited: SKU|Product Name|Price|Department)
         loadInventory("products.csv", inventory);
@@ -96,66 +98,110 @@ public class Store {
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
         System.out.println("========================= INVENTORY =========================");
-
-        System.out.printf("%-14s %-38s %-9s %-15s%n","Product ID", "Product Name", "Price", "Department");
+        //// looked this format up online to set the table in this organized format
+        System.out.printf("%-14s %-38s %-9s %-15s%n", "Product ID", "Product Name", "Price", "Department");
 
         System.out.println("-----------------------------------------------------------------------");
-
+       /// a for loop to get through every item in inventory
         for (Product product : inventory) {
-
+             // printf statement to organize everything
             System.out.printf("%-14s %-38s $%-8.2f %-15s%n", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
 
         }
 
         System.out.println("================================================================");
-
-        System.out.print("You can find a product with an ID, Enter the ID here: ");
-        System.out.println();
-        String input = scanner.nextLine();
+        ///after organizing, asking what to do next
         boolean isDone = false;
-
-            for (Product product : inventory) {
-                if (product.getSku().equalsIgnoreCase(input)) {
-                    System.out.println("The " + product.getName() + " was added to cart!");
-                    cart.add(product);
-                    return;
-                }
-
+        while (!isDone) {
+            System.out.print("S - Search Product ==> A - Add to Cart ==> B - Back: ");
+            String input = scanner.nextLine();
+          //if they choose A, then ask the sku
+            if (input.equalsIgnoreCase("S")) {
+                System.out.println("Enter the SKU of the product you want to find");
+                String id = scanner.nextLine();
+           ///run the method by the input, if its finds it in the inventory, we will know
+                findProductById(id, inventory);
             }
-        System.out.println("Enter a valid product id or We don't have that product");
+           //if they choose , then we can add items by the sku to the cart
+            else if (input.equalsIgnoreCase("A")) {
+                System.out.println("Enter the SKU of a product to add to your cart");
+                String cartItem = scanner.nextLine();
+
+                boolean itemFound = false;
+                 // first check to see if the input sku is correct, if it is, then add to cart
+                for (Product product : inventory) {
+                    if (product.getSku().equalsIgnoreCase(cartItem)) {
+                        cart.add(product);
+                        System.out.printf("%s was added to the cart\n", product.getName());
+                        System.out.println();
+                        itemFound = true;
+                        break; // break the loop so it doesn't continue
+                    }
+                }
+             /// out side the loop, if there is no item by that sku, we print this.
+                if (!itemFound) {
+                    System.out.println("Product not found in inventory.");
+                }
+            }
+                   // this returns us to the choices
+            else if (input.equalsIgnoreCase("B")) {
+                return;
+            }
+        }
 
     }
-        /**
-         * Shows the contents of the cart, calculates the total,
-         * and offers the option to check out.
-         * }     */
-        public static void displayCart (ArrayList < Product > cart, Scanner scanner){
-            // TODO:
-            //   • list each product in the cart
-            //   • compute the total cost
-            //   • ask the user whether to check out (C) or return (X)
-            //   • if C, call checkOut(cart, totalAmount, scanner)
+
+    /**
+     * Shows the contents of the cart, calculates the total,
+     * and offers the option to check out.
+     * }
+     */
+    public static void displayCart(ArrayList<Product> cart, Scanner scanner) {
+        // TODO:
+        //   • list each product in the cart
+        //   • compute the total cost
+        //   • ask the user whether to check out (C) or return (X)
+        //   • if C, call checkOut(cart, totalAmount, scanner)
+        for (Product product : cart) {
+            System.out.printf("You have: ");
+
         }
 
-        /**
-         * Handles the checkout process:
-         * 1. Confirm that the user wants to buy.
-         * 2. Accept payment and calculate change.
-         * 3. Display a simple receipt.
-         * 4. Clear the cart.
-         */
-        public static void checkOut (ArrayList < Product > cart, double totalAmount, Scanner scanner){
-            // TODO: implement steps listed above
-        }
 
-        /**
-         * Searches a list for a product by its id.
-         *
-         * @return the matching Product, or null if not found
-         */
-        public static Product findProductById (String id, ArrayList < Product > inventory){
-            // TODO: loop over the list and compare ids
-            return null;
+    }
+
+    /**
+     * Handles the checkout process:
+     * 1. Confirm that the user wants to buy.
+     * 2. Accept payment and calculate change.
+     * 3. Display a simple receipt.
+     * 4. Clear the cart.
+     */
+    public static void checkOut(ArrayList<Product> cart, double totalAmount, Scanner scanner) {
+
+
+        // TODO: implement steps listed above
+    }
+
+    /**
+     * Searches a list for a product by its id.
+     *
+     * @return the matching Product, or null if not found
+     */
+    public static Product findProductById(String id, ArrayList<Product> inventory) {
+        // TODO: loop over the list and compare ids
+        for (Product product : inventory) {
+            if (product.getSku().equalsIgnoreCase(id)) {
+                System.out.println("Product found: " + product.getName() );
+                break;
+            }
         }
+        return null;
+    }
+
+    public static void productCount(ArrayList<Product> cart, int counter) {
+
+        int itemCount;
+    }
 
 }
