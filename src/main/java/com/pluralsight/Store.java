@@ -102,9 +102,9 @@ public class Store {
         System.out.printf("%-14s %-38s %-9s %-15s%n", "Product ID", "Product Name", "Price", "Department");
 
         System.out.println("-----------------------------------------------------------------------");
-       /// a for loop to get through every item in inventory
+        /// a for loop to get through every item in inventory
         for (Product product : inventory) {
-             // printf statement to organize everything
+            // printf statement to organize everything
             System.out.printf("%-14s %-38s $%-8.2f %-15s%n", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
 
         }
@@ -115,20 +115,20 @@ public class Store {
         while (!isDone) {
             System.out.print("S - Search Product ==> A - Add to Cart ==> B - Back: ");
             String input = scanner.nextLine();
-          //if they choose A, then ask the sku
+            //if they choose A, then ask the sku
             if (input.equalsIgnoreCase("S")) {
                 System.out.println("Enter the SKU of the product you want to find");
                 String id = scanner.nextLine();
-           ///run the method by the input, if its finds it in the inventory, we will know
+                ///run the method by the input, if its finds it in the inventory, we will know
                 findProductById(id, inventory);
             }
-           //if they choose , then we can add items by the sku to the cart
+            //if they choose , then we can add items by the sku to the cart
             else if (input.equalsIgnoreCase("A")) {
                 System.out.println("Enter the SKU of a product to add to your cart");
                 String cartItem = scanner.nextLine();
 
                 boolean itemFound = false;
-                 // first check to see if the input sku is correct, if it is, then add to cart
+                // first check to see if the input sku is correct, if it is, then add to cart
                 for (Product product : inventory) {
                     if (product.getSku().equalsIgnoreCase(cartItem)) {
                         cart.add(product);
@@ -138,12 +138,12 @@ public class Store {
                         break; // break the loop so it doesn't continue
                     }
                 }
-             /// out side the loop, if there is no item by that sku, we print this.
+                /// out side the loop, if there is no item by that sku, we print this.
                 if (!itemFound) {
                     System.out.println("Product not found in inventory.");
                 }
             }
-                   // this returns us to the choices
+            // this returns us to the choices
             else if (input.equalsIgnoreCase("B")) {
                 return;
             }
@@ -162,12 +162,35 @@ public class Store {
         //   • compute the total cost
         //   • ask the user whether to check out (C) or return (X)
         //   • if C, call checkOut(cart, totalAmount, scanner)
+        double totalAmount = 0;
+        boolean isDone = false;
+        if (cart.isEmpty()) {
+            System.out.println("The cart is empty");
+            return;
+        }
         for (Product product : cart) {
-            System.out.printf("You have: ");
-
+            System.out.printf("%32s  %30.2f%n", product.getName(),product.getPrice());
+            totalAmount += product.getPrice();
         }
 
+        System.out.printf("The total is %.2f%n: " , totalAmount);
 
+        while (!isDone) {
+            System.out.println("Would like to checkout?");
+            System.out.println("C ==> Checkout, return (X)");
+
+            String checkoutChoice = scanner.nextLine();
+
+            if (checkoutChoice.equalsIgnoreCase("C")) {
+                checkOut(cart, totalAmount, scanner);
+                isDone = true;
+            }
+            else if (checkoutChoice.equalsIgnoreCase("X")) {
+                return;
+            }else{
+                System.out.println("Invalid entry,Please Choose C or X!");
+            }
+        }
     }
 
     /**
@@ -178,9 +201,9 @@ public class Store {
      * 4. Clear the cart.
      */
     public static void checkOut(ArrayList<Product> cart, double totalAmount, Scanner scanner) {
-
-
         // TODO: implement steps listed above
+
+
     }
 
     /**
@@ -192,7 +215,7 @@ public class Store {
         // TODO: loop over the list and compare ids
         for (Product product : inventory) {
             if (product.getSku().equalsIgnoreCase(id)) {
-                System.out.println("Product found: " + product.getName() );
+                System.out.println("Product found: " + product.getName());
                 break;
             }
         }
@@ -201,7 +224,6 @@ public class Store {
 
     public static void productCount(ArrayList<Product> cart, int counter) {
 
-        int itemCount;
     }
 
 }
