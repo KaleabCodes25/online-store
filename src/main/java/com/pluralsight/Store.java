@@ -95,29 +95,34 @@ public class Store {
     public static void displayProducts(ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
-        System.out.println("=====These are the products in our inventory=====");
+        System.out.println("========================= INVENTORY =========================");
+
+        System.out.printf("%-14s %-38s %-9s %-15s%n","Product ID", "Product Name", "Price", "Department");
+
+        System.out.println("-----------------------------------------------------------------------");
+
         for (Product product : inventory) {
-            System.out.printf("%s|          %s           |%.2f|          %s", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
-            System.out.println();
+
+            System.out.printf("%-14s %-38s $%-8.2f %-15s%n", product.getSku(), product.getName(), product.getPrice(), product.getDepartment());
 
         }
+
+        System.out.println("================================================================");
+
         System.out.print("You can find a product with an ID, Enter the ID here: ");
         System.out.println();
         String input = scanner.nextLine();
         boolean isDone = false;
-
 
             for (Product product : inventory) {
                 if (product.getSku().equalsIgnoreCase(input)) {
                     System.out.println("The " + product.getName() + " was added to cart!");
                     cart.add(product);
                     return;
-
-                } else {
-                    System.out.println("Enter a valid product id or We don't have that product");
                 }
 
             }
+        System.out.println("Enter a valid product id or We don't have that product");
 
     }
         /**
