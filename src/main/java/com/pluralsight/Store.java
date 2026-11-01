@@ -1,10 +1,10 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.sql.SQLOutput;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -230,7 +230,8 @@ public class Store {
      * 4. Clear the cart.
      */
     public static void checkOut(ArrayList<Product> cart, double totalAmount, Scanner scanner) {
-        // TODO: implement steps listed above
+
+
          //displaying the total at first
         System.out.printf("Cart Total: $%.2f%n", totalAmount);
         // Asking for payment
@@ -248,7 +249,15 @@ public class Store {
         double change = payment - totalAmount;
         System.out.println();
 
-       // making the receipt
+        LocalDateTime now = LocalDateTime.now();
+        // show localDateTime
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddhhmm"); // formatter to show the pattern
+
+        String fileName ="Receipts/" + now.format(formatter) + ".txt";  // the Receipts/, makes it so thats the directory. We already created it.
+
+
+        // making the receipt
         System.out.println("======== SALES RECEIPT =========");
         // creating another arraylist to hold the already displayed sku, like the cart
         ArrayList<String> receiptSku = new ArrayList<>();
@@ -274,10 +283,44 @@ public class Store {
            // printf and add spaces to make the receipt more cleaner.
             System.out.printf("%-30s %2d x $%-8.2f $%.2f%n", product.getName(), quantity, product.getPrice(), subtotal);
 
-
-
         }
-        //
+
+        try { ///try catch for the buffereader and exceptions
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName,true)); // create writer, and make true, so the text is saved.
+            writer.write("===========Sales Receipt==========");
+            writer.newLine();
+
+            writer.write("-----------------------------------");
+            writer.newLine();
+
+                // a for each loop to list all the items in the cart
+            for (Product product : cart) {
+                writer.write(product.getName()); // write their names on the txt file
+                writer.newLine();
+            }
+             // copy past and info from the receipt
+
+            writer.write(String.format("Total: $%.2f", totalAmount));
+            writer.newLine();
+
+            writer.write(String.format("Cash: $%.2f", payment));
+            writer.newLine();
+
+            writer.write(String.format("Change Given: $%.2f", change));
+            writer.newLine();
+
+            writer.write("==============================");
+            writer.newLine();
+
+            writer.write("Thank you for shopping with us!");
+            writer.newLine();
+
+            writer.close();  // close the writer to show the text .
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+
         System.out.println("-----------------------------------");
         System.out.printf("Total:       $%.2f%n", totalAmount);
         System.out.printf("Cash:        $%.2f%n", payment);
@@ -289,11 +332,8 @@ public class Store {
         cart.clear(); // to clear the items from the cart, so that they don't stay after the transaction.
     }
 
-    /**
-     * Searches a list for a product by its id.
-     *
-     * @return the matching Product, or null if not found
-     */
+
+
     public static Product findProductById(String id, ArrayList<Product> inventory) {
         // TODO: loop over the list and compare ids
         for (Product product : inventory) {
