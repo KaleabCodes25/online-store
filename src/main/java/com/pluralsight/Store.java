@@ -257,6 +257,7 @@ public class Store {
           // if its in the receipt list, we skip the iteration.
             if (receiptSku.contains(product.getSku())) {
                 continue;
+
             }
             // counter for the quantity of products
             int quantity = 0;
