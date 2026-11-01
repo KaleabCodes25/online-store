@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
@@ -23,7 +24,6 @@ public class Store {
         // Create lists for inventory and the shopping cart
         ArrayList<Product> inventory = new ArrayList<>();
         ArrayList<Product> cart = new ArrayList<>();
-        ArrayList<Product> counter = new ArrayList<>();
 
         // Load inventory from the data file (pipe-delimited: SKU|Product Name|Price|Department)
         loadInventory("products.csv", inventory);
@@ -69,8 +69,8 @@ public class Store {
         //       create a Product object, and add it to the inventory list
         String line;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("products.csv"));
-            reader.readLine();
+            BufferedReader reader = new BufferedReader(new FileReader("products.csv")); // created a buffer reader.
+            reader.readLine(); // start reading after skipping the first line.
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split("\\|");
                 String sku = tokens[0];
@@ -162,18 +162,43 @@ public class Store {
         //   • compute the total cost
         //   • ask the user whether to check out (C) or return (X)
         //   • if C, call checkOut(cart, totalAmount, scanner)
-        double totalAmount = 0;
+        ArrayList<String> displayedSku = new ArrayList<>();
         boolean isDone = false;
-        if (cart.isEmpty()) {
+        if (cart.isEmpty()) {  // if the cart is empty, then return to menu and show this message.
             System.out.println("The cart is empty");
             return;
         }
-        for (Product product : cart) {
-            System.out.printf("%32s  %30.2f%n", product.getName(),product.getPrice());
-            totalAmount += product.getPrice();
-        }
+        double totalAmount = 0;
+        System.out.printf("%-35s %-10s %-12s %-12s%n", "Product", "Quantity", "Price", "Subtotal");
 
-        System.out.printf("The total is %.2f%n: " , totalAmount);
+
+        // outer loop selects every item
+        for (Product product : cart) {
+            // if the sku of the product is in displayed, it gets skipped
+            if (displayedSku.contains(product.getSku())) {//started as an empty list
+                continue;// skip this iteration // if the sku are in the list, this line executes and the iteration is skipped.
+            }
+            //counter for the quantity
+            int quantity = 0;
+
+
+            //a nested loop, to check each item against the selected product of the outer loop.
+            for (Product item : cart) {
+                if (product.getSku().equals(item.getSku())) {  // if the sku matches, then add 1 to quantity.
+                    quantity++;
+
+                }
+            }
+            double subTotal = quantity * product.getPrice();
+            totalAmount += subTotal; //add the subtotal to the total while looping
+
+            // then make sure to add all products that are to be displayed.
+            displayedSku.add(product.getSku());
+            System.out.printf("%-35s %-10d $%-10.2f $%-10.2f%n", product.getName(), quantity, product.getPrice(), subTotal);  // then printf to make it organized
+
+        }
+        System.out.printf("Cart Total: $%.2f%n", totalAmount); //this prints the total of the cart
+
 
         while (!isDone) {
             System.out.println("Would like to checkout?");
@@ -182,13 +207,17 @@ public class Store {
             String checkoutChoice = scanner.nextLine();
 
             if (checkoutChoice.equalsIgnoreCase("C")) {
+                System.out.println("Proceeding to checkout");
                 checkOut(cart, totalAmount, scanner);
                 isDone = true;
-            }
-            else if (checkoutChoice.equalsIgnoreCase("X")) {
+                System.out.println();
+
+            } else if (checkoutChoice.equalsIgnoreCase("X")) {
                 return;
-            }else{
+            } else {
                 System.out.println("Invalid entry,Please Choose C or X!");
+                System.out.println();
+
             }
         }
     }
@@ -202,8 +231,61 @@ public class Store {
      */
     public static void checkOut(ArrayList<Product> cart, double totalAmount, Scanner scanner) {
         // TODO: implement steps listed above
+         //displaying the total at first
+        System.out.printf("Cart Total: $%.2f%n", totalAmount);
+        // Asking for payment
+        System.out.print("Enter the amount you would like to pay: ");
+        double payment = scanner.nextDouble();
+        scanner.nextLine();
+         // if payment is less than the amount owed.
+        while(payment < totalAmount){
+            System.out.println("Insufficient payment. Please try again.");
+
+            System.out.print("Enter the required amount: ");
+            payment = scanner.nextDouble();
+            scanner.nextLine();
+        }
+        double change = payment - totalAmount;
+        System.out.println();
+
+       // making the receipt
+        System.out.println("======== SALES RECEIPT =========");
+        // creating another arraylist to hold the already displayed sku, like the cart
+        ArrayList<String> receiptSku = new ArrayList<>();
+         // outer loop to go over each product
+        for (Product product : cart) {
+          // if its in the receipt list, we skip the iteration.
+            if (receiptSku.contains(product.getSku())) {
+                continue;
+            }
+            // counter for the quantity of products
+            int quantity = 0;
+             // inner loop for comparing each one against the product on the outer loop
+            for (Product item : cart) {
+                if (product.getSku().equals(item.getSku())) { // if the skus are a match, then we add one to quantity.
+                    quantity++;
+                }
+            }
+            // calculating the subtotal of a product.
+            double subtotal = quantity * product.getPrice();
+           // then add the product to the receipt sku list
+            receiptSku.add(product.getSku());
+           // printf and add spaces to make the receipt more cleaner.
+            System.out.printf("%-30s %2d x $%-8.2f $%.2f%n", product.getName(), quantity, product.getPrice(), subtotal);
 
 
+
+        }
+        //
+        System.out.println("-----------------------------------");
+        System.out.printf("Total:       $%.2f%n", totalAmount);
+        System.out.printf("Cash:        $%.2f%n", payment);
+        System.out.printf("Change Given: $%.2f%n", change);
+
+        System.out.println("==============================");
+        System.out.println("Thank you for shopping with us!");
+
+        cart.clear(); // to clear the items from the cart, so that they don't stay after the transaction.
     }
 
     /**
@@ -222,8 +304,5 @@ public class Store {
         return null;
     }
 
-    public static void productCount(ArrayList<Product> cart, int counter) {
-
-    }
 
 }
