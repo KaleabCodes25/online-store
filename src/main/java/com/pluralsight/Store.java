@@ -84,8 +84,7 @@ public class Store {
             }
 
         } catch (Exception e) {
-            System.err.println(e);
-            System.out.println(e.getCause());
+            System.err.println("Error reading the file: " + e.getMessage());
         }
 
     }
@@ -97,7 +96,7 @@ public class Store {
     public static void displayProducts(ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
-        System.out.println("========================= INVENTORY =========================");
+        System.out.println("========================= INVENTORY ====================================");
         //// looked this format up online to set the table in this organized format
         System.out.printf("%-14s %-38s %-9s %-15s%n", "Product ID", "Product Name", "Price", "Department");
 
@@ -109,7 +108,7 @@ public class Store {
 
         }
 
-        System.out.println("================================================================");
+        System.out.println("========================================================================");
         ///after organizing, asking what to do next
         boolean isDone = false;
         while (!isDone) {
