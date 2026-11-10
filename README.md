@@ -91,9 +91,9 @@ and generates receipts that are displayed to the customer and saved as a "txt" f
      Optional GIF: LICEcap (free, Windows and Mac, <https://www.cockos.com/licecap/>) records a region of the
      screen straight to a .gif. Keep it under 10 seconds and under 10 MB, save it into `images`. -->
 
-![Main menu]([Screen Recording Feature 2026-11-10 182315.gif](images/Screen%20Recording%20Feature%202026-11-10%20182315.gif)menu.png)
+![Main menu](![Screen Recording Feature 2026-11-10 182315.gif](images/Screen%20Recording%20Feature%202026-11-10%20182315.gif)menu.png)
 
-![One feature in action]([Screen Recording Menu 2026-11-10 182149.gif](images/Screen%20Recording%20Menu%202026-11-10%20182149.gif)eature.png)
+![One feature in action](![Screen Recording Menu 2026-11-10 182149.gif](images/Screen%20Recording%20Menu%202026-11-10%20182149.gif)eature.png)
 
 
 
